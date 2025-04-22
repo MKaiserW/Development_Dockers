@@ -1,0 +1,19 @@
+
+volumes:
+  git-repo:
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Keep the container running
+    tty: true
+    # Run in interactive mode
+    stdin_open: true
+    # If you need to run Docker commands that require privileged mode
+    # privileged: true
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
