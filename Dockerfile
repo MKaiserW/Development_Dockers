@@ -2,12 +2,14 @@
 
 FROM ubuntu:oracular
 
-RUN apt-get update 
-RUN apt-get install -y \
+RUN apt update 
+RUN apt install -y \
     curl \
     git \
     gnome-terminal \
     ca-certificates\
+    nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -26,11 +28,10 @@ RUN echo \
     tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 RUN apt-get update \
-    && apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    && apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
+    && rm -rf /var/lib/apt/lists/*
 ##########################
 ## Docker install stuff ##
 ##########################
 
-WORKDIR /app
-
-CMD ["/bin/bash"]
+RUN apt upgrade

@@ -1,6 +1,7 @@
 
 volumes:
   git-repo:
+  ssh-key:
 
 services:
   dev:
@@ -9,11 +10,36 @@ services:
       dockerfile: Dockerfile
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    # Keep the container running
+      - ssh-key:/root/.ssh
+      - git-repo:/root/app-repo
+
+    # keep the container running basically -t
     tty: true
-    # Run in interactive mode
+    # run in interactive mode basically -i
     stdin_open: true
-    # If you need to run Docker commands that require privileged mode
+    # incase docker commands that require privileged mode
     # privileged: true
+    command: >
+      /bin/bash -c "
+        if [ ! -f ~/.ssh/id_ed25519 ]; then 
+          ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N '' && 
+          cat ~/.ssh/id_ed25519.pub &&
+          echo 'Add key to https://github.com/settings/ssh/new';
+        else 
+          echo 'Not overwriting, SSH key already exist';
+        fi
+        tail -f /dev/null
+      "
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
+    ports:
+    # DONT FORWARD THE VITE PORT, LET VSCODE DEAL WITH IT
+      - "5173:5173"
+
+# for dir in $(find . -type f -name "package.json" -not -path "*/node_modules/*"); do
+#     (cd $(dirname "$dir") && npm install)
+# done
+
+# for dir in $(find . -type f -name "requirements.txt"); do
+#     (cd $(dirname "$dir") && pip install -r requirements.txt)
+# done
