@@ -36,7 +36,7 @@ RUN apt-get update \
 
 RUN apt upgrade
 
-RUN echo -e '\n\
+RUN echo '\n\
     # tab completion for git \n\
     if [ -f /usr/share/bash-completion/completions/git ]; then\n\
         . /usr/share/bash-completion/completions/git\n\
